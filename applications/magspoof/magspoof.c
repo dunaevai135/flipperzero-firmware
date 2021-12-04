@@ -111,20 +111,22 @@ static void playBit(uint8_t sendBit)
   delay_us(CLOCK_US);
 }
 
-// static void magspoof_spoof(string_t track_str) {
-static void magspoof_spoof() {
+static void magspoof_spoof(string_t track_str) {
     // TODO
     // string_set_str(data, "\%qwe;test?");
     // track_str -> data
-    char* data = ";123;test?\0";
+    // char* data = "%B123456781234567^LASTNAME/FIRST^YYMMSSSDDDDDDDDDDDDDDDDDDDDDDDDD?\0";
+    // char* data = ";123456781234567=YYMMSSSDDDDDDDDDDDDDD?\0";
+    const char* data = string_get_cstr(track_str);
     furi_hal_power_enable_otg();
     gpio_item_configure_all_pins(GpioModeOutputPushPull);
     delay(200);
 
     FURI_CRITICAL_ENTER();
 
-    // gpio_item_set_pin(0, 1);
+    // TRECK NUM +1
     const uint8_t track = 1;
+
     const uint8_t bitlen[] = {
         7, 5, 5 };
     const int sublen[] = {
@@ -214,7 +216,19 @@ static bool magspoof_view_input_callback(InputEvent* event, void* context) {
             });
         }
         if(event->key == InputKeyLeft) {
-            magspoof_spoof();
+            string_t v;
+            string_init(v);
+            // string_sets(v, );
+            with_view_model(app->view, (UartDumpModel * model) {
+                for(size_t i = 0; i < LINES_ON_SCREEN; i++) {
+                    string_sets(v, v, model->list[i]->text);
+                }
+                return true;
+            });
+            const char* deb = string_get_cstr(v);
+            magspoof_spoof(v);
+            printf("%s",deb);
+            string_clear(v);
         }
     }
     return consumed;
