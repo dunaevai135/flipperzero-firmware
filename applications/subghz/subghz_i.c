@@ -41,8 +41,8 @@ bool subghz_get_preset_name(SubGhz* subghz, string_t preset) {
     case FuriHalSubGhzPreset2FSKDev476Async:
         preset_name = "FuriHalSubGhzPreset2FSKDev476Async";
         break;
-        FURI_LOG_E(SUBGHZ_PARSER_TAG, "Unknown preset");
     default:
+        FURI_LOG_E(SUBGHZ_PARSER_TAG, "Unknown preset");
         return false;
         break;
     }
@@ -286,7 +286,7 @@ bool subghz_get_next_name_file(SubGhz* subghz) {
         storage_get_next_filename(
             storage, SUBGHZ_RAW_PATH_FOLDER, subghz->file_name, SUBGHZ_APP_EXTENSION, temp_str);
 
-        memcpy(subghz->file_name, string_get_cstr(temp_str), strlen(string_get_cstr(temp_str)));
+        strcpy(subghz->file_name, string_get_cstr(temp_str));
         res = true;
     }
 
